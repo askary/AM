@@ -1,0 +1,100 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Acelerometro</title>
+<script type="text/javascript" charset="utf-8" src="cordova.js"></script>
+<link href="themes/tema-personalizado.min.css" rel="stylesheet" type="text/css">
+<link href="jquery.mobile-1.4.0/jquery.mobile.icons-1.4.0.min.css" rel="stylesheet" type="text/css">
+<link href="jquery.mobile-1.4.0/jquery.mobile.structure-1.4.0.min.css" rel="stylesheet" type="text/css">
+<script src="jquery.mobile-1.4.0/jquery-1.10.2.min.js" type="text/javascript"></script>
+<script type="text/javascript">
+$( document ).on( "mobileinit", function() {
+  $.mobile.pageLoadErrorMessage = "Error al cargar la página";
+  $.mobile.pageLoadErrorMessageTheme = "a"; 
+});
+</script>
+<script src="jquery.mobile-1.4.0/jquery.mobile-1.4.0.min.js" type="text/javascript"></script>
+<script type="text/javascript">
+
+document.addEventListener("deviceready", onDeviceReady, false);
+
+function onDeviceReady() {
+    console.log(" ****	Dispositivo Listo	**** ");
+	activarLectura();
+}
+</script>
+</head>
+
+<body>
+<div data-role="page" id="acel" data-theme="a"> 
+  <script type="text/javascript">
+  
+	var lecturaActual;
+	
+	$("#acel").bind('pagecreate',function(){
+			
+			
+			$("#obtenerDatos").on('change', function(){
+				if($(this).val() == 'si'){
+					activarLectura();
+					}
+					else{
+						detenerLectura();
+						}
+				});
+		});
+	
+	$("#acel").on("pagecontainerhide",function(event, ui){
+		detenerLectura();
+		});
+	
+	function activarLectura(){
+			lecturaActual = navigator.accelerometer.watchAcceleration(exitoAcel,errorAcel,{frequency:3000});
+		}
+		
+	function detenerLectura(){
+		if (lecturaActual){
+			navigator.accelerometer.clearWatch(lecturaActual);
+			lecturaActual = null;
+			}
+		}
+	
+	function exitoAcel(aceleracion){
+		$("#acelX").text("X = " + aceleracion.x);
+		$("#acelY").text("Y = " + aceleracion.y);
+		$("#acelZ").text("Z = " + aceleracion.z); 
+		$("#tiempo").text("Tiempo = " + aceleracion.timestamp);  
+		}
+	
+	function errorAcel(){
+		$("#error").append('<p>error</p>');
+		}
+	
+  </script>
+  <div data-role="header">
+    <h1>Acelerómetro</h1>
+  </div>
+  <div data-role="content">
+    <div data-role="fieldcontain">
+      <label for="obtenerDatos">Obtener Datos: </label>
+      <select name="obtenerDatos" id="obtenerDatos" data-role="slider">
+        <option value="no">No</option>
+        <option value="si" selected>Sí</option>
+      </select>
+    </div>
+    <br />
+    <br />
+    <label id="acelX"></label>
+    <br />
+    <label id="acelY"></label>
+    <br />
+    <label id="acelZ"></label>
+    <br />
+    <label id="tiempo"></label>
+    <br />
+    <div id="error"></div>
+  </div>
+</div>
+</body>
+</html>

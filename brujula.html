@@ -1,0 +1,74 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Brújula</title>
+<script type="text/javascript" charset="utf-8" src="cordova.js"></script>
+<link href="themes/tema-personalizado.min.css" rel="stylesheet" type="text/css">
+<link href="jquery.mobile-1.4.0/jquery.mobile.icons-1.4.0.min.css" rel="stylesheet" type="text/css">
+<link href="jquery.mobile-1.4.0/jquery.mobile.structure-1.4.0.min.css" rel="stylesheet" type="text/css">
+<script src="jquery.mobile-1.4.0/jquery-1.10.2.min.js" type="text/javascript"></script>
+<script type="text/javascript">
+$( document ).on( "mobileinit", function() {
+  $.mobile.pageLoadErrorMessage = "Error al cargar la página";
+  $.mobile.pageLoadErrorMessageTheme = "a"; 
+});
+</script>
+<script src="jquery.mobile-1.4.0/jquery.mobile-1.4.0.min.js" type="text/javascript"></script>
+<script type="text/javascript">
+
+document.addEventListener("deviceready", onDeviceReady, false);
+
+function onDeviceReady() {
+    console.log(" ****	Dispositivo Listo	**** ");
+}
+</script>
+</head>
+
+<body>
+<div data-role="page" id="brujula" data-theme="a">
+<script type="text/javascript">
+var brujula = null;
+
+function iniciar() {
+	var opciones = { frequency: 1500 };
+	brujula = navigator.compass.watchHeading(obtenerOrientacion, errorBrujula, opciones);
+}
+
+function detener() {
+	if (brujula) {
+		navigator.compass.clearWatch(brujula);
+		brujula = null;
+	}
+}
+
+function obtenerOrientacion(orientacion){
+	$("#grados").text("Orientación: "+ orientacion.magneticHeading + "°");
+	$("#tiempo").text("Tiempo: "+ orientacion.timestamp);
+	$("#info").text();
+	}
+
+function errorBrujula(error){
+	$("#info").text("Error: "+error.code);
+	}
+
+</script>
+  <div data-role="header">
+    <h1>Brújula</h1>
+  </div>
+  <div data-role="content">
+    <div data-inline="true">
+        <label id="grados"></label>
+        <br />
+        <label id="tiempo"></label>
+    	<br />
+        <label id="info"> Presione iniciar para activar la brujula . . .</label>
+    	<br />
+      <button data-inline="true" onClick="iniciar();">Iniciar</button>
+      <button data-inline="true" onClick="detener();">Detener</button>
+    </div>
+  
+  </div>
+</div>
+</body>
+</html>

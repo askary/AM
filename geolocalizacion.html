@@ -1,0 +1,59 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Geolocalizacion</title>
+<script type="text/javascript" charset="utf-8" src="cordova.js"></script>
+<link href="themes/tema-personalizado.min.css" rel="stylesheet" type="text/css">
+<link href="jquery.mobile-1.4.0/jquery.mobile.icons-1.4.0.min.css" rel="stylesheet" type="text/css">
+<link href="jquery.mobile-1.4.0/jquery.mobile.structure-1.4.0.min.css" rel="stylesheet" type="text/css">
+<script src="jquery.mobile-1.4.0/jquery-1.10.2.min.js" type="text/javascript"></script>
+<script type="text/javascript">
+$( document ).on( "mobileinit", function() {
+  $.mobile.pageLoadErrorMessage = "Error al cargar la página";
+  $.mobile.pageLoadErrorMessageTheme = "a"; 
+});
+</script>
+<script src="jquery.mobile-1.4.0/jquery.mobile-1.4.0.min.js" type="text/javascript"></script>
+<script type="text/javascript">
+
+document.addEventListener("deviceready", onDeviceReady, false);
+
+function onDeviceReady() {
+    console.log(" ****	Dispositivo Listo	**** ");
+	navigator.geolocation.getCurrentPosition(mostrarPosicion, error);
+}
+</script>
+</head>
+
+<body>
+<div data-role="page" id="geo" data-theme="a">
+<script type="text/javascript">
+
+function mostrarPosicion(posicion){
+	$("#info").html(
+					'Latitud: '           + posicion.coords.latitude              + '<br />' +
+					'Longitud: '          + posicion.coords.longitude             + '<br />' +
+					'Altitud: '           + posicion.coords.altitude              + '<br />' +
+					'Precisión: '           + posicion.coords.accuracy              + '<br />' +
+					'Precisión de Altitud: '  + posicion.coords.altitudeAccuracy      + '<br />' +
+					'Dirección: '            + posicion.coords.heading               + '<br />' +
+					'Velocidad: '              + posicion.coords.speed                 + '<br />' +
+					'Tiempo: '          + posicion.timestamp                    + '<br />' 
+					
+					);
+	}
+	
+function error(){
+	alert('Error !');
+	}
+</script>
+  <div data-role="header">
+    <h1>Geolocalización</h1>
+  </div>
+  <div data-role="content">
+  <div id="info">Buscando Geolocalización . . .</div>
+  </div>
+</div>
+</body>
+</html>

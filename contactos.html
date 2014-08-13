@@ -1,0 +1,129 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Contactos</title>
+<script type="text/javascript" charset="utf-8" src="cordova.js"></script>
+<link href="themes/tema-personalizado.min.css" rel="stylesheet" type="text/css">
+<link href="jquery.mobile-1.4.0/jquery.mobile.icons-1.4.0.min.css" rel="stylesheet" type="text/css">
+<link href="jquery.mobile-1.4.0/jquery.mobile.structure-1.4.0.min.css" rel="stylesheet" type="text/css">
+<script src="jquery.mobile-1.4.0/jquery-1.10.2.min.js" type="text/javascript"></script>
+<script type="text/javascript">
+$( document ).on( "mobileinit", function() {
+  $.mobile.pageLoadErrorMessage = "Error al cargar la página";
+  $.mobile.pageLoadErrorMessageTheme = "a"; 
+});
+</script>
+<script src="jquery.mobile-1.4.0/jquery.mobile-1.4.0.min.js" type="text/javascript"></script>
+<script type="text/javascript">
+
+document.addEventListener("deviceready", onDeviceReady, false);
+
+function onDeviceReady() {
+    console.log(" ****	Dispositivo Listo	**** ");
+}
+</script>
+</head>
+
+<body>
+<div data-role="page" id="contactos"> 
+  <script type="text/javascript">
+ 
+//----------------------------- Buscar Contactos
+
+$("#contactos").bind('pagecreate', function(){
+	$("#nombreBuscar").off('keyup').on('keyup', function(){
+		buscarContactos();
+		});
+	});
+	
+function buscarContactos(){
+	var opciones = new ContactFindOptions();
+	opciones.filter = $("#nombreBuscar").val();
+	opciones.multiple = true;
+	var campos = ["displayName","name"];
+	navigator.contacts.find(campos, busquedaExitosa, errorBusqueda, opciones);
+	}
+	
+function busquedaExitosa(contactos){
+	$("#resultado").html("");
+	for (var i = 0; i < contactos.length; i++){
+		$("#resultado").append((i+1) + ". " + contactos[i].displayName + "<br/>");
+		}
+	
+	if(contactos.length == 0){
+		$("#resultado").html("<em> No se encontraron contactos. </em>");
+		}
+	
+	}
+	
+function errorBusqueda(){
+	alert('Error en la busqueda !');
+	}
+	
+	
+  
+//----------------------------- Agregar Nuevo Contacto
+
+function guardar(nuevoContacto) {
+    alert("¡ Guardado Exitosamente !");
+	$("#agregarContacto").popup("close");
+	$("#nombre").val("");
+	$("#apellido").val("");
+	$("#numero").val("");
+};
+
+function error(errorContacto) {
+    alert("Error = " + errorContacto.code);
+};
+
+function guardarContacto(){
+	var nuevoContacto = navigator.contacts.create();
+	nuevoContacto.displayName = $("#nombre").val() + " " + $("#apellido").val();
+	nuevoContacto.nickname = $("#nombre").val() + " " + $("#apellido").val();
+	
+	var nombre = new ContactName();
+	nombre.givenName = $("#nombre").val() 
+	nombre.familyName = $("#apellido").val();
+	nuevoContacto.name = nombre;
+	
+	var numerosTelefono = [];
+    numerosTelefono[0] = new ContactField('Movil',$("#numero").val(), true);
+	nuevoContacto.phoneNumbers = numerosTelefono;
+	
+	nuevoContacto.save(guardar,error);
+	
+	}
+</script>
+  <div data-role="header">
+    <h1>Contactos</h1>
+  </div>
+  <div data-role="content"> <a href="#agregarContacto" data-role="button" data-inline="true" data-icon="plus" data-rel="popup" data-position-to = "window" >Agregar Contacto</a>
+  
+    <div data-role="fieldcontain">
+      <label for="">Buscar Contacto:</label>
+      <input name="nombreBuscar" type="text" id="nombreBuscar" value=""  />
+    </div>
+    <div id="resultado"></div>
+      
+      
+    <div id="agregarContacto" data-role="popup" data-theme="a" style="padding:2%;">
+      <h2>Agregar Contacto</h2>
+      <div data-role="fieldcontain">
+        <label for="nombre">Nombre</label>
+        <input type="text" name="nombre" id="nombre" value=""  />
+      </div>
+      <div data-role="fieldcontain">
+        <label for="apellido">Apellido</label>
+        <input type="text" name="apellido" id="apellido" value=""  />
+      </div>
+      <div data-role="fieldcontain">
+        <label for="numero">Número:</label>
+        <input type="tel" name="numero" id="numero" value=""  />
+      </div>
+      <button data-inline="true" data-icon="check" onClick="guardarContacto();">Guardar</button>
+    </div>
+  </div>
+</div>
+</body>
+</html>
